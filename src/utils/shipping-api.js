@@ -15,3 +15,9 @@ export async function getShipmentByID(id, callback) {
         .catch(err => console.error(err));
 
 }
+
+export async function updateShipmentStatus(id, status) {
+
+    return axios.post(`http://localhost:8888/shipments/${id}/change-status`, {status})
+
+}

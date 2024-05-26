@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Collapse, Typography, Input} from 'antd';
-import {getOrders, getShipmentByID} from "../utils/shipping-api";
+import {Collapse, Typography, Input, Select} from 'antd';
+import {getOrders, getShipmentByID, updateShipmentStatus} from "../utils/shipping-api";
 
 const {Title} = Typography;
 const {Search} = Input;
@@ -28,14 +28,32 @@ export const Shipping = () => {
         }
     }
 
-    const Order = ({id, createdAt, destiny, dueDate, status, orderID}) => {
+    const Order = ({id, createdAt, buyerId, dueDate, status, orderID}) => {
+        const [selectedStatus, setSelectedStatus] = useState(status);
+
+        const handleChange = async (value) => {
+            await updateShipmentStatus(id, value);
+            setSelectedStatus(value);
+        };
+
         return (
             <div>
+                <p><strong>Shipping ID: </strong> {id}</p>
                 <p><strong>Order ID:</strong> {orderID}</p>
+                <p><strong>Buyer ID:</strong> {buyerId}</p>
                 <p><strong>Created at:</strong> {createdAt}</p>
                 <p><strong>Due date:</strong> {dueDate}</p>
-                <p><strong>Destiny:</strong> {destiny}</p>
-                <p><strong>Status:</strong> {status}</p>
+                <p><strong>Status:</strong>
+                    <Select
+                        value={selectedStatus}
+                        style={{width: 120, marginLeft: '8px'}}
+                        onChange={handleChange}
+                    >
+                        <Option value="DISPATCHED">Dispatched</Option>
+                        <Option value="PROGRESS">Progress</Option>
+                        <Option value="DELIVERED">Delivered</Option>
+                    </Select>
+                </p>
                 <p><strong>Shipping ID:</strong> {id}</p>
             </div>
         );
