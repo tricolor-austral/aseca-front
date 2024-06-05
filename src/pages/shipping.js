@@ -1,25 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Collapse, Typography, Input, Select } from 'antd';
-import { getOrders, getShipmentByID, updateShipmentStatus } from '../utils/shipping-api';
+import React, {useEffect, useState} from 'react';
+import {Collapse, Typography, Input, Select} from 'antd';
+import {getOrders, getShipmentByID, updateShipmentStatus} from "../utils/shipping-api";
 
-const { Title } = Typography;
-const { Search } = Input;
-const { Panel } = Collapse;
-const { Option } = Select;
-
-const allowedTransitions = {
-    NEW: ['DISPATCHED'],
-    DISPATCHED: ['PROGRESS'],
-    PROGRESS: ['DELIVERED'],
-    DELIVERED: []
-};
+const {Title} = Typography;
+const {Search} = Input;
+const {Panel} = Collapse;
 
 export const Shipping = () => {
     const [orders, setOrders] = useState([]);
 
+
     useEffect(() => {
         async function fetchData() {
             await getOrders(setOrders);
+
         }
         fetchData();
     }, []);
@@ -27,14 +21,14 @@ export const Shipping = () => {
     const onSearch = async (value) => {
         if (value) {
             await getShipmentByID(value, (data) => {
-                setOrders([data]);
+                setOrders([data])
             });
         } else {
             await getOrders(setOrders);
         }
-    };
+    }
 
-    const Order = ({ id, createdAt, buyerId, dueDate, status, orderID }) => {
+    const Order = ({id, createdAt, buyerId, dueDate, status, orderID}) => {
         const [selectedStatus, setSelectedStatus] = useState(status);
 
         const handleChange = async (value) => {
@@ -52,24 +46,25 @@ export const Shipping = () => {
                 <p><strong>Status:</strong>
                     <Select
                         value={selectedStatus}
-                        style={{ width: 120, marginLeft: '8px' }}
+                        style={{width: 120, marginLeft: '8px'}}
                         onChange={handleChange}
                     >
-                        {allowedTransitions[selectedStatus].map((statusOption) => (
-                            <Option key={statusOption} value={statusOption}>{statusOption}</Option>
-                        ))}
+                        <Option value="NEW">New</Option>
+                        <Option value="PROGRESS">Progress</Option>
+                        <Option value="DELIVERED">Delivered</Option>
                     </Select>
                 </p>
+                <p><strong>Shipping ID:</strong> {id}</p>
             </div>
         );
     };
 
     return (
-        <div style={{ padding: '16px 32px' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}>
-                <Title style={{ color: '#899596' }}>Shipping</Title>
+        <div style={{padding: '16px 32px'}}>
+            <div style={{display: 'flex', justifyContent: 'center', marginBottom: '32px'}}>
+                <Title style={{color: '#899596'}}>Shipping</Title>
             </div>
-            <div style={{ width: '500px', margin: '0 auto', marginBottom: '32px' }}>
+            <div style={{width: '500px', margin: '0 auto', marginBottom: '32px'}}>
                 <Search
                     placeholder="Search by shipping ID"
                     allowClear
@@ -78,7 +73,7 @@ export const Shipping = () => {
                     onSearch={onSearch}
                 />
             </div>
-            <div style={{ width: '750px', margin: '0 auto' }}>
+            <div style={{width: '750px', margin: '0 auto'}}>
                 {orders.length > 0 && orders[0].id ?
                     <Collapse accordion>
                         {orders.map((order) => (
@@ -87,7 +82,7 @@ export const Shipping = () => {
                             </Panel>
                         ))}
                     </Collapse> :
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
                         <Title level={4}>No orders found</Title>
                     </div>
                 }
