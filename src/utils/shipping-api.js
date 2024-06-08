@@ -1,8 +1,9 @@
 import axios from 'axios';
+import {API_URL} from "./constants";
 
 export async function getOrders(callback) {
 
-    return axios.get(`http://localhost:8888/shipments`)
+    return axios.get(`${API_URL}/shipments`)
         .then(res => callback(res.data))
         .catch(err => console.error(err));
 
@@ -10,13 +11,14 @@ export async function getOrders(callback) {
 
 export async function getShipmentByID(id, callback) {
 
-    return axios.get(`http://localhost:8888/shipments/${id}`)
+    return axios.get(`${API_URL}/shipments/${id}`)
         .then(res => callback(res.data))
         .catch(err => console.error(err));
 
 }
 
 export async function updateShipmentStatus(id, status) {
-    console.log("hola")
-    return axios.post(`http://localhost:8888/shipments/${id}/change-status`, {status})
+
+    return axios.post(`${API_URL}/shipments/${id}/change-status`, {status})
+
 }

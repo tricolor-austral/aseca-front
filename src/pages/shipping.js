@@ -27,7 +27,7 @@ export const Shipping = () => {
         }
     }
 
-    const Order = ({id, createdAt, buyerId, dueDate, status, orderID}) => {
+    const Order = ({id, createdAt, dueDate, status, orderID}) => {
         const [selectedStatus, setSelectedStatus] = useState(status);
 
         const handleChange = async (value) => {
@@ -47,10 +47,9 @@ export const Shipping = () => {
         };
 
         return (
-            <div>
+            <div id={id}>
                 <p><strong>Shipping ID: </strong> {id}</p>
                 <p><strong>Order ID:</strong> {orderID}</p>
-                <p><strong>Buyer ID:</strong> {buyerId}</p>
                 <p><strong>Created at:</strong> {createdAt}</p>
                 <p><strong>Due date:</strong> {dueDate}</p>
                 <p><strong>Status:</strong>
