@@ -5,15 +5,14 @@ import {getOrders, getShipmentByID, updateShipmentStatus} from "../utils/shippin
 const {Title} = Typography;
 const {Search} = Input;
 const {Panel} = Collapse;
+const {Option} = Select;
 
 export const Shipping = () => {
     const [orders, setOrders] = useState([]);
 
-
     useEffect(() => {
         async function fetchData() {
             await getOrders(setOrders);
-
         }
         fetchData();
     }, []);
@@ -21,7 +20,7 @@ export const Shipping = () => {
     const onSearch = async (value) => {
         if (value) {
             await getShipmentByID(value, (data) => {
-                setOrders([data])
+                setOrders([data]);
             });
         } else {
             await getOrders(setOrders);
@@ -34,6 +33,17 @@ export const Shipping = () => {
         const handleChange = async (value) => {
             await updateShipmentStatus(id, value);
             setSelectedStatus(value);
+        };
+
+        const getNextStatusOptions = (status) => {
+            switch (status) {
+                case "NEW":
+                    return [{ value: "PROGRESS", label: "Progress" }];
+                case "PROGRESS":
+                    return [{ value: "DELIVERED", label: "Delivered" }];
+                default:
+                    return [];
+            }
         };
 
         return (
@@ -49,12 +59,11 @@ export const Shipping = () => {
                         style={{width: 120, marginLeft: '8px'}}
                         onChange={handleChange}
                     >
-                        <Option value="NEW">New</Option>
-                        <Option value="PROGRESS">Progress</Option>
-                        <Option value="DELIVERED">Delivered</Option>
+                        {getNextStatusOptions(selectedStatus).map(option => (
+                            <Option key={option.value} value={option.value}>{option.label}</Option>
+                        ))}
                     </Select>
                 </p>
-                <p><strong>Shipping ID:</strong> {id}</p>
             </div>
         );
     };
